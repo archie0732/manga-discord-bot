@@ -1,5 +1,5 @@
 import { Events } from 'discord.js';
-import {  MangaBotEventHandler } from '../../class/event';
+import { MangaBotEventHandler } from '../../class/event';
 
 export default new MangaBotEventHandler({
   event: Events.InteractionCreate,

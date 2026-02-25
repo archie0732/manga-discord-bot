@@ -3,82 +3,84 @@ import type {
   ApplicationCommandOptionChoiceData,
   AutocompleteInteraction,
   Awaitable,
+  BitFieldResolvable,
   ButtonInteraction,
   ChatInputCommandInteraction,
+  MessageFlags,
   ModalBuilder,
   ModalSubmitInteraction,
   SharedSlashCommand,
   SlashCommandSubcommandBuilder,
 } from 'discord.js';
-import type {  MangaBotClient } from './client';
+import type { MangaBotClient } from './client';
 
 export interface MangaBotCommandOptions {
   builder: SharedSlashCommand;
   defer: boolean;
-  ephemeral: boolean;
+  flags?: BitFieldResolvable<Extract<keyof typeof MessageFlags, 'Ephemeral'>, MessageFlags.Ephemeral>;
   modals?: Record<string, ModalBuilder>;
   execute: (
     this: MangaBotClient,
-    interaction: ChatInputCommandInteraction<'cached'>
+    interaction: ChatInputCommandInteraction<'cached'>,
   ) => Awaitable<void>;
   onAutocomplete?: (
     this: MangaBotClient,
-    interaction: AutocompleteInteraction<'cached'>
+    interaction: AutocompleteInteraction<'cached'>,
   ) => Awaitable<readonly ApplicationCommandOptionChoiceData[]>;
   onButton?: (
     this: MangaBotClient,
     interaction: ButtonInteraction<'cached'>,
-    buttonId: string
+    buttonId: string,
   ) => Awaitable<void>;
   onModalSubmit?: (
     this: MangaBotClient,
     interaction: ModalSubmitInteraction<'cached'>,
-    modalId: string
+    modalId: string,
   ) => Awaitable<void>;
   onSelectMenu?: (
     this: MangaBotClient,
     interaction: AnySelectMenuInteraction<'cached'>,
-    menuId: string
+    menuId: string,
   ) => Awaitable<void>;
 }
 
 export class MangaBotCommand implements MangaBotCommandOptions {
   builder: SharedSlashCommand;
   defer: boolean;
-  ephemeral: boolean;
+  flags?: BitFieldResolvable<Extract<keyof typeof MessageFlags, 'Ephemeral'>, MessageFlags.Ephemeral>;
   modals?: Record<string, ModalBuilder>;
   execute: (
     this: MangaBotClient,
-    interaction: ChatInputCommandInteraction<'cached'>
+    interaction: ChatInputCommandInteraction<'cached'>,
   ) => Awaitable<void>;
 
   onAutocomplete?: (
     this: MangaBotClient,
-    interaction: AutocompleteInteraction<'cached'>
+    interaction: AutocompleteInteraction<'cached'>,
   ) => Awaitable<readonly ApplicationCommandOptionChoiceData[]>;
 
   onButton?: (
     this: MangaBotClient,
     interaction: ButtonInteraction<'cached'>,
-    buttonId: string
+    buttonId: string,
   ) => Awaitable<void>;
 
   onModalSubmit?: (
     this: MangaBotClient,
     interaction: ModalSubmitInteraction<'cached'>,
-    modalId: string
+    modalId: string,
   ) => Awaitable<void>;
 
   onSelectMenu?: (
     this: MangaBotClient,
     interaction: AnySelectMenuInteraction<'cached'>,
-    menuId: string
+    menuId: string,
   ) => Awaitable<void>;
 
   constructor(options: MangaBotCommandOptions) {
     this.builder = options.builder;
     this.defer = options.defer;
-    this.ephemeral = options.ephemeral;
+    this.flags = options.flags;
     this.modals = options.modals;
     this.execute = options.execute;
     this.onAutocomplete = options.onAutocomplete;
@@ -97,21 +99,21 @@ export interface MangaBotSubCommand<T = undefined> {
   ): Awaitable<boolean | void>;
   onAutocomplete?: (
     this: MangaBotClient,
-    interaction: AutocompleteInteraction<'cached'>
+    interaction: AutocompleteInteraction<'cached'>,
   ) => Awaitable<readonly ApplicationCommandOptionChoiceData[]>;
   onButton?: (
     this: MangaBotClient,
     interaction: ButtonInteraction<'cached'>,
-    buttonId: string
+    buttonId: string,
   ) => Awaitable<void>;
   onModalSubmit?: (
     this: MangaBotClient,
     interaction: ModalSubmitInteraction<'cached'>,
-    modalId: string
+    modalId: string,
   ) => Awaitable<void>;
   onSelectMenu?: (
     this: MangaBotClient,
     interaction: AnySelectMenuInteraction<'cached'>,
-    menuId: string
+    menuId: string,
   ) => Awaitable<void>;
 }

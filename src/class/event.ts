@@ -1,5 +1,5 @@
 import type { ClientEvents } from 'discord.js';
-import type {  MangaBotClient } from './client';
+import type { MangaBotClient } from './client';
 
 type Events = keyof ClientEvents;
 
