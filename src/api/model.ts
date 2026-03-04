@@ -66,3 +66,17 @@ export class ScraperError<T> extends Error {
     Object.setPrototypeOf(this, ScraperError.prepareStackTrace);
   }
 }
+
+export abstract class R7SearchAPI {
+  abstract search(keyword: string): Promise<void>;
+}
+
+export class R7SearchError<T> extends Error {
+  public scrap: T;
+
+  constructor(message: string, scrap: T) {
+    super(message);
+    this.name = 'R7SearchError';
+    this.scrap = scrap;
+  }
+}

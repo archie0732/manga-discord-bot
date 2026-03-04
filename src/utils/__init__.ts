@@ -12,4 +12,8 @@ const manhuagui_data = {
   last_check_time: '',
 };
 
+writeFileSync('.env', 'DISCORD_TOKEN=');
+
 writeFileSync(manhuagui_file, JSON.stringify(manhuagui_data, null, 2));
+
+console.log('[manga bot]all init setup complete');
