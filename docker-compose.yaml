@@ -1,0 +1,14 @@
+services:
+  manga-bot:
+    build: .
+    container_name: manga-discord-bot
+    restart: always
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    env_file:
+      - .env
+    deploy:
+      resources:
+        limits:
+          memory: 512M
