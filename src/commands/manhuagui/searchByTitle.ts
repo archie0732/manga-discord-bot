@@ -2,41 +2,18 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  ChatInputCommandInteraction,
-  EmbedBuilder,
+  Message,
   MessageFlags,
   SlashCommandBuilder,
-  SlashCommandNumberOption,
-  ButtonInteraction,
   SlashCommandStringOption,
 } from 'discord.js';
 import { MangaBotCommand } from '../../class/command';
 import { ManhuaguiManga, ManhuaguiSearchAPI } from '../../api/manhuagui';
-import { isNumericLiteral } from 'typescript';
 import { getGuildPath } from '../../utils/path';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { getSubListPath } from '../../utils/path';
-
-export interface DatabaseSchema {
-  mangas: TrackedManga[];
-  last_check_time: string;
-}
-
-export interface TrackedManga {
-  id: string;
-  title: string;
-  latest_chapter: string;
-  target_channels: TargetChannel[];
-}
-
-export interface TargetChannel {
-  guild: string;
-  channel: string;
-}
-
-interface LocalGuildConfig {
-  channel_id: string;
-}
+import type { DatabaseSchema, LocalGuildConfig } from '../../utils/models';
+import { createMangaUpdateEmbed } from '../../utils';
 
 export default new MangaBotCommand({
   builder: new SlashCommandBuilder()
@@ -62,6 +39,15 @@ export default new MangaBotCommand({
 
   async execute(interaction) {
     const mangaId = interaction.options.getString('title', true);
+
+    if (!(/^\d+$/.test(mangaId))) {
+      interaction.editReply({
+        content: '請點選上方的提示(不要直接送出)',
+        flags: MessageFlags.IsComponentsV2,
+        files: ['https://i.ytimg.com/vi/3pw1aojfnpY/maxresdefault.jpg'],
+      });
+      return;
+    }
 
     const guildId = interaction.guildId;
 
@@ -96,7 +82,7 @@ export default new MangaBotCommand({
 
     await interaction.editReply({
       content: `您查尋的 [${manga.title}](${manga.url}), 現在已經更新到 [${manga.latest_chapter}](${manga.latest_chapter_url})\n\n-# 如果需要訂閱漫畫可以按下訂閱按鈕，取消訂閱可以使用 \`/dissub_manhuagui\``,
-      embeds: [createMangaEmbed(interaction, manga)],
+      embeds: [createMangaUpdateEmbed(manga, { name: interaction.guild?.name || 'Manga Notifier', iconURL: interaction.guild?.iconURL() || '' })],
       components: [createMangaButton(guildId, mangaId.toString(), isSub)],
     });
   },
@@ -180,41 +166,6 @@ export default new MangaBotCommand({
   },
 
 });
-
-const createMangaEmbed = (
-  interaction: ChatInputCommandInteraction,
-  manga: ManhuaguiManga,
-) => {
-  return new EmbedBuilder()
-    .setAuthor({
-      name: interaction.guild?.name || '未知伺服器',
-      iconURL: interaction.guild?.iconURL() || '',
-    })
-    .setTitle(manga.title)
-    .setDescription(
-      manga.detail.length > 200
-        ? manga.detail.substring(0, 200) + '...'
-        : manga.detail,
-    )
-    .setThumbnail(manga.thum)
-    .setURL(manga.url)
-    .setFields([
-      {
-        name: '✒️ 作者',
-        value: manga.author.join(', ') || '未知',
-        inline: true,
-      },
-      { name: '👾 目前狀態', value: manga.status, inline: true },
-      { name: '🏆 排名', value: manga.rank?.toString() || '無', inline: true },
-      {
-        name: '🔔 更新',
-        value: `[${manga.latest_chapter}](${manga.latest_chapter_url}) | ${manga.latest_update_date}`,
-        inline: false,
-      },
-      { name: '🏷️ 標籤', value: manga.tags.join(', ') || '無', inline: false },
-    ])
-    .setFooter({ text: 'Source: manhuagui | Provider: arch1e Manga Bot V4' });
-};
 
 const createMangaButton = (
   guildId: string,
