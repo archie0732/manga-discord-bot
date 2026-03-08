@@ -20,6 +20,10 @@ export const checkManhuaguiSubscriptions = async (datatype: DataWebSite): Promis
   }
 
   const subscriptionsManga = JSON.parse(readFileSync(path, 'utf-8')) as DatabaseSchema;
+
+  if (subscriptionsManga.mangas === undefined) {
+    return null;
+  }
   const updateResults: UpdateResult[] = [];
   let hasChanges = false;
 
