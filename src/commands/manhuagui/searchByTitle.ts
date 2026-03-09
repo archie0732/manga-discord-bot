@@ -174,7 +174,7 @@ const createMangaButton = (
 ): ActionRowBuilder<ButtonBuilder> =>
   new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
-      .setCustomId(`search_manga_by_id:${guildId}-${mangaId}`)
+      .setCustomId(`search_manga_by_title:${guildId}-${mangaId}`)
       .setLabel(isSub ? '已訂閱' : '訂閱')
       .setDisabled(isSub)
       .setStyle(isSub ? ButtonStyle.Success : ButtonStyle.Primary),
