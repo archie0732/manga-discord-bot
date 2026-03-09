@@ -6,6 +6,7 @@ services:
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
+      - ./.setup:/app/.setup
     env_file:
       - .env
     deploy:

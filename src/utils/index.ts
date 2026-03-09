@@ -29,7 +29,6 @@ export const checkManhuaguiSubscriptions = async (datatype: DataWebSite): Promis
 
   logger.info(`開始檢查 ${subscriptionsManga.mangas.length} 本漫畫更新...`);
 
-  // 改用 for...of 迴圈來嚴格控制請求頻率
   for (const sub of subscriptionsManga.mangas) {
     try {
       const api = new ManhuaguiManga(sub.id);
