@@ -17,7 +17,10 @@ import type { MangaBotClient } from './client';
 export interface MangaBotCommandOptions {
   builder: SharedSlashCommand;
   defer: boolean;
-  flags?: BitFieldResolvable<Extract<keyof typeof MessageFlags, 'Ephemeral'>, MessageFlags.Ephemeral>;
+  flags?: BitFieldResolvable<
+    Extract<keyof typeof MessageFlags, 'Ephemeral'>,
+    MessageFlags.Ephemeral
+  >;
   modals?: Record<string, ModalBuilder>;
   execute: (
     this: MangaBotClient,
@@ -47,7 +50,11 @@ export interface MangaBotCommandOptions {
 export class MangaBotCommand implements MangaBotCommandOptions {
   builder: SharedSlashCommand;
   defer: boolean;
-  flags?: BitFieldResolvable<Extract<keyof typeof MessageFlags, 'Ephemeral'>, MessageFlags.Ephemeral>;
+  flags?: BitFieldResolvable<
+    Extract<keyof typeof MessageFlags, 'Ephemeral'>,
+    MessageFlags.Ephemeral
+  >;
+
   modals?: Record<string, ModalBuilder>;
   execute: (
     this: MangaBotClient,
